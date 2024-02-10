@@ -1,0 +1,40 @@
+.page_footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background-color: white;
+  border-top: 1px solid var(--lightGray);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 5rem;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.nav_button {
+  border: none;
+  border-radius: 5rem;
+  padding: 1rem 2rem;
+  transition: 0.2s background-color;
+}
+
+.nav_button:enabled {
+  background-color: var(--blue);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nav_button:enabled:hover {
+  background-color: var(--tintedBlue);
+}
+
+.nav_button:disabled {
+  background-color: var(--lightGray);
+}
+
+.nav_countdown {
+  margin-right: 1rem;
+}

@@ -1,0 +1,157 @@
+.post_wrapper {
+  max-width: 36rem;
+  border-width: 0 1px 1px 1px;
+  border-style: solid;
+  border-color: var(--lightGray);
+  padding: 1rem;
+  display: flex;
+  font-size: 0.9375rem;
+}
+
+.profile_header {
+  display: flex; 
+  justify-content: space-between;
+}
+
+.post_main {
+  margin-left: 1rem;
+}
+
+.profile_info {
+  display: flex;
+}
+
+.profile_info cite {
+  display: flex;
+  font-style: normal;
+}
+
+.profile_picture {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--darkGray);
+  flex-shrink: 0;
+}
+
+.post_content {
+  white-space: break-spaces;
+  margin: 0;
+}
+
+.post_actions_list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+}
+
+.spacer {
+  margin: 0 0.25rem;
+}
+
+.post_actions_list {
+  justify-content: space-between;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.post_actions_list button {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--darkGray);
+}
+
+.post_actions_list button svg {
+  flex-shrink: 0;
+  width: 1.175rem;
+  height: 1.175rem;
+  fill: var(--darkGray);
+}
+
+.post_actions_list button span {
+  padding: 0 0.25rem;
+}
+
+.post_actions_notext_wrapper {
+  display: flex;
+}
+
+.post_actions_notext {
+  flex: 1;
+}
+
+.view_count {
+  font-weight: 700;
+  color: var(--black);
+}
+
+.profile_username {
+  color: var(--darkGray);
+  margin-left: 0.25rem;
+}
+
+.profile_fullName {
+  font-weight: 700;
+}
+
+.profile_userActions {
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+.profile_userActions svg {
+  width: 1.25rem;
+  fill: var(--darkGray);
+}
+
+.post_time {
+  color: var(--darkGray);
+}
+
+.context_note_wrapper {
+  margin-top: 0.75rem;
+}
+
+.context_note_wrapper header {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 0.75rem;
+}
+
+.context_note_wrapper h3 {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.context_note_wrapper footer {
+  color: var(--darkGray);
+  font-size: 0.8125rem;
+  padding: 0.75rem 0;
+}
+
+.context_note_wrapper footer p {
+  margin: 0;
+}
+
+.context_note_wrapper svg {
+  width: 1.175rem;
+  height: 1.175rem;
+  fill: var(--blue);
+  margin-right: 0.5rem;
+}
+
+.context_note_box {
+  border: 1px solid var(--mediumGray);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.context_note_body {
+  padding: 0.75rem;
+  margin: 0;
+}
