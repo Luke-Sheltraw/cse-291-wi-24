@@ -2,7 +2,6 @@
 
 import { Footer, SurveyQuestion, RequiredNote } from '@/app/components';
 import { type Question } from '@/app/types';
-import { submitData } from '@/app/actions/session';
 import { useState } from 'react';
 import styles from './fragment.module.css';
 
@@ -31,14 +30,14 @@ const SurveyFragment = (
   }
 
   const submitCallback = () => {
-    submitData();
+    // TODO: send survey data
     nextFragment();
   }
 
   return (
     <>
     <div className={ styles.survey_wrapper }>
-      <main className={ styles.survey_main }>
+      <section className={ styles.survey_main }>
       {
         questions.map((q: Question) => (
           <SurveyQuestion
@@ -49,7 +48,7 @@ const SurveyFragment = (
         ))
       }
       <RequiredNote />
-      </main>
+      </section>
     </div>
     <Footer
         messageDisabled='Please answer all required questions.'

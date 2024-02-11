@@ -34,7 +34,7 @@ const Footer = (
       }
       </p>
       <button
-        className={ styles.nav_button }
+        className='primary_button'
         disabled={ !enabled }
         onClick={ () => continueAction() }
       >

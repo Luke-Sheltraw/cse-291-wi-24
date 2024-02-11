@@ -28,3 +28,25 @@ body {
 button {
   font-size: 1rem;
 }
+
+.primary_button {
+  border: none;
+  border-radius: 5rem;
+  padding: 1rem 2rem;
+  transition: 0.2s background-color;
+}
+
+.primary_button:enabled {
+  background-color: var(--blue);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary_button:enabled:hover {
+  background-color: var(--tintedBlue);
+}
+
+.primary_button:disabled {
+  background-color: var(--lightGray);
+}

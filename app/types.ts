@@ -12,6 +12,7 @@ export type Option = {
 }
 
 export enum Fragment {
+  Registration,
   PreSurvey,
   Feed,
   PostSurvey,

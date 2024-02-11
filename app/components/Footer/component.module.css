@@ -13,28 +13,6 @@
   box-sizing: border-box;
 }
 
-.nav_button {
-  border: none;
-  border-radius: 5rem;
-  padding: 1rem 2rem;
-  transition: 0.2s background-color;
-}
-
-.nav_button:enabled {
-  background-color: var(--blue);
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.nav_button:enabled:hover {
-  background-color: var(--tintedBlue);
-}
-
-.nav_button:disabled {
-  background-color: var(--lightGray);
-}
-
 .nav_countdown {
   margin-right: 1rem;
 }

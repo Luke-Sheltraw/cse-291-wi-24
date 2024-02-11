@@ -2,7 +2,12 @@
 
 import styles from './page.module.css';
 import { useState } from 'react';
-import { FeedFragment, SurveyFragment, ConfirmationFragment } from './fragments';
+import {
+  FeedFragment,
+  SurveyFragment,
+  ConfirmationFragment,
+  RegistrationFragment,
+} from './fragments';
 import { Fragment, type Question } from './types';
 import pre_qs from './pre_questions.json';
 import post_qs from './post_questions.json';
@@ -11,13 +16,18 @@ const preQuestions = pre_qs as Question[];
 const postQuestions = post_qs as Question[];
 
 export default function Home() {
-  const [curFragment, setCurFragment] = useState<Fragment>(Fragment.PreSurvey);
+  const [curFragment, setCurFragment] = useState<Fragment>(Fragment.Registration);
 
   return (
     <main className={ styles.wrapper }>
       {
         (() => {
           switch (curFragment) {
+            case Fragment.Registration: return (
+              <RegistrationFragment
+                nextFragment={ () => setCurFragment(Fragment.PreSurvey) }
+              />
+            );
             case Fragment.PreSurvey: return (
               <SurveyFragment
                 nextFragment={ () => setCurFragment(Fragment.Feed) }
