@@ -13,7 +13,8 @@ const TextFrq = (
 ) => {
 
   const inputCallback = (e: any) => {
-    answeredCallback(e.target?.value?.length > 0);
+    if (e.target?.value?.length === 0) answeredCallback(null);
+    answeredCallback(e.target?.value);
   }
 
   return (

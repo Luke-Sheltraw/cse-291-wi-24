@@ -1,53 +1,46 @@
+import { TimedButton } from '@/app/components';
 import styles from './component.module.css';
-
-function padZeros(value: string): string {
-  return value.length == 1
-    ? `0${ value }`
-    : value;
-}
-
-function formatSeconds(seconds: number): string {
-  return `${
-    padZeros(Math.floor(seconds / 60).toString())
-  }:${
-    padZeros((seconds % 60).toString())
-  }`;
-}
+import { useState } from 'react';
 
 const Footer = (
-  { messageEnabled, messageDisabled, enabled, secondsLeft, continueAction }:
+  { messageEnabled, messageDisabled, enabled, timerLength, continueAction }:
   {
     messageEnabled: string,
     messageDisabled: string,
-    enabled: boolean,
-    secondsLeft?: number,
+    enabled?: boolean,
+    timerLength?: number,
     continueAction: Function,
   }
 ) => {
+  const [timerLock, setTimerLock] = useState<boolean>(!!timerLength);
+
   return (
     <footer className={ styles.page_footer }>
       <p>
       { 
-        enabled
+        (enabled !== false && !timerLock)
         ? messageEnabled
         : messageDisabled
       }
       </p>
-      <button
-        className='primary_button'
-        disabled={ !enabled }
-        onClick={ () => continueAction() }
-      >
-        {
-          !enabled &&
-          secondsLeft &&
-          secondsLeft > 0 &&
-          <span role='timer' className={ styles.nav_countdown }>
-            { formatSeconds(secondsLeft) }
-          </span>
-        }
-        Continue
-      </button>
+      {
+        timerLength
+        ?
+          <TimedButton
+            timerLength={ timerLength }
+            buttonAction={ continueAction }
+            disabled={ !enabled }
+            activeCallback={ () => setTimerLock(false) }
+          >
+            Continue
+          </TimedButton>
+        :
+          <button
+            className='primary_button'
+            disabled={ !enabled }
+            onClick={ () => continueAction() }
+          >Continue</button>
+      }
     </footer>
   );
 }

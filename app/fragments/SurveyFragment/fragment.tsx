@@ -3,24 +3,31 @@
 import { Footer, SurveyQuestion, RequiredNote } from '@/app/components';
 import { type Question } from '@/app/types';
 import { submitSurvey } from '@/app/actions/session';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import styles from './fragment.module.css';
 
 const SurveyFragment = (
-  { nextFragment, questions }:
-  { nextFragment: Function, questions: Question[] }
+  { nextFragment, surveyPostVariant, questions }:
+  {
+    nextFragment: Function,
+    surveyPostVariant: 'pre-survey' | 'post-survey',
+    questions: Question[]
+  }
 ) => {
   const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
+  const questionsAndResponses = useRef<{ [question: string]: string | string[] }>({});
 
-  const answeredCallback = (uid: string, answered: boolean) => {
+  const answeredCallback = (question: Question, answer: string | string[]) => {
     setAnsweredQuestions((curAnsweredQuestions) => {
-      if (answered) {
-        if (curAnsweredQuestions.includes(uid)) return curAnsweredQuestions;
-        return [...curAnsweredQuestions, uid];
+      if (answer) {
+        if (curAnsweredQuestions.includes(question.uid)) return curAnsweredQuestions;
+        return [...curAnsweredQuestions, question.uid];
       } else {
-        return curAnsweredQuestions.filter((curUid) => curUid !== uid);
+        return curAnsweredQuestions.filter((curUid) => curUid !== question.uid);
       }
     });
+
+    questionsAndResponses.current[question.question_body] = answer;
   }
 
   const getEnabledStatus = () => {
@@ -32,17 +39,10 @@ const SurveyFragment = (
 
   const submitCallback = () => {
     const success = submitSurvey({
-      type: 'pre-survey',
-      questions: [
-        {
-          question: 'What\'s your favorite color?',
-          response: 'Red',
-        },
-        {
-          question: 'What\'s your name?',
-          response: 'Luke',
-        },
-      ]
+      type: surveyPostVariant,
+      questions:
+        Object.entries(questionsAndResponses.current)
+        .map(([question, response]) => ({ question, response})),
     });
 
     if (!success) return;
@@ -59,7 +59,7 @@ const SurveyFragment = (
           <SurveyQuestion
             key={ q.uid }
             question={ q }
-            answeredCallback={ (answered: boolean) => answeredCallback(q.uid, answered) } 
+            answeredCallback={ (answer: string | string[]) => answeredCallback(q, answer) } 
           />
         ))
       }

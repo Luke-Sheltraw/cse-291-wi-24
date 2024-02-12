@@ -14,7 +14,15 @@ const McqMany = (
 ) => {
 
   const inputCallback = (e: any) => {
-    answeredCallback(document.querySelectorAll(`input[name=${ id  }]:checked`).length > 0);
+    const values = (
+      Array.from(
+        document.querySelectorAll(`input[name=${ id  }]:checked`)
+      ) as HTMLInputElement[]
+    )
+      .map((e) => e?.value?.toString());
+
+    if (values.length === 0) answeredCallback(null);
+    answeredCallback(values);
   }
 
   return (

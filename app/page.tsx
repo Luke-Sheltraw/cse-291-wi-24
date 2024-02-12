@@ -31,6 +31,7 @@ export default function Home() {
             case Fragment.PreSurvey: return (
               <SurveyFragment
                 nextFragment={ () => setCurFragment(Fragment.Feed) }
+                surveyPostVariant='pre-survey'
                 questions={ preQuestions }
               />
             );
@@ -42,6 +43,7 @@ export default function Home() {
             case Fragment.PostSurvey: return (
               <SurveyFragment
                 nextFragment={ () => setCurFragment(Fragment.Confirmation) }
+                surveyPostVariant='post-survey'
                 questions={ postQuestions }
               />
             );

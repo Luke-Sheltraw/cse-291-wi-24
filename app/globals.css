@@ -12,6 +12,7 @@
 
 :root {
   --darkGray: #536471;
+  --backdropColor: rgb(207, 217, 222, 0.6);
   --mediumGray: #cfd9de;
   --lightGray: #eff3f4;
   --black: #0f1419;
@@ -23,6 +24,11 @@ body {
   margin: 0;
   color: var(--black);
   font-family: Chirp, system-ui, -apple-system, Roboto, 'Open Sans', sans-serif;
+}
+
+body:has(dialog[open]) {
+  height: 100vh;
+  overflow: hidden;
 }
 
 button {

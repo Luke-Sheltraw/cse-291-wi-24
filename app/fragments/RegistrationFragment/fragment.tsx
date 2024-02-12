@@ -3,14 +3,10 @@ import { startSession } from '@/app/actions/session';
 
 const RegistrationFragment = ({ nextFragment }: { nextFragment: Function }) => {
   const handleAppStart = async () => {
-    const session_id = await startSession();
-
-    if (!session_id) {
+    if (!(await startSession())) {
       console.error('Unable to start session');
       return;
     }
-
-    document.cookie = `session_id=${ session_id }`;
 
     nextFragment();
   }

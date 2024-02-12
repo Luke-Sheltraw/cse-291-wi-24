@@ -7,10 +7,16 @@ const supabaseUrl = process.env.SUPABASE_URL ?? '';
 const supabaseKey = process.env.SUPABASE_KEY ?? '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export const startSession = async (): Promise<string | null> => {
+// TODO: add more error handling
+
+export const hasExistingSession = async (): Promise<boolean> => {
+  return cookies().has('session_id');
+}
+
+export const startSession = async (): Promise<boolean> => {
   if (cookies().has('session_id')) {
-    console.error('User already has session');
-    return null;
+    console.error('User already has session'); // TODO: add user prompt to continue session
+    return false;
   }
 
   const { data, error } = await supabase
@@ -18,14 +24,15 @@ export const startSession = async (): Promise<string | null> => {
     .insert({})
     .select();
 
-  if (error) {
-    console.log('Error creating new sesion');
-    return null;
+  const session_id = data?.[0]?.id;
+
+  if (error || !session_id) {
+    console.log('Error creating new sesion', error);
+    return false;
   }
 
-  const session_id = data?.[0].id ?? null;
-
-  return session_id; // return new session id, or null if failure
+  cookies().set('session_id', session_id);
+  return true; // return success status
 }
 
 export const submitSurvey = async ({
@@ -35,29 +42,44 @@ export const submitSurvey = async ({
   type: 'pre-survey' | 'post-survey',
   questions: {
     question: string,
-    response: string,
+    response: string | string[],
   }[]
 }): Promise<boolean> => {
+  /* Validate session */
   const session_id = cookies().get('session_id')?.value;
+  if (!session_id) {
+    console.error('No session associated to survey submission');
+    return false;
+  }
 
-  if (!session_id) return false;
-
+  /* Validate format of input */
   if (
     !(type === 'pre-survey' || type === 'post-survey')
     || !questions.every((q) => {
       return (
         Object.keys(q).length === 2
         && typeof q.question === 'string'
-        && typeof q.response === 'string'
+        && (typeof q.response === 'string' || Array.isArray(q.response))
       );
     })
-  ) return false;
+  ) {
+    console.error('Malformed survey input');
+    return false;
+  }
 
+
+  /* Submit survey */
   const surveyResponse = await supabase
     .from('Surveys')
     .insert({ questions })
     .select();
 
+  if (surveyResponse?.error) {
+    console.error('Error submitting survey', surveyResponse?.error);
+    return false;
+  }
+
+  /* Attach survey to session */
   const sessionResponse = await supabase
     .from('Sessions')
     .update({
@@ -70,13 +92,16 @@ export const submitSurvey = async ({
     .eq('id', session_id);
   
   if (sessionResponse?.error) {
-    console.error('Error submitting survey', sessionResponse?.error);
+    console.error('Error attaching survey to session', sessionResponse?.error);
     return false;
   }
 
-  return true; // return success status
+  /* All sucessful */
+  return true;
 }
 
 export const getProgress = async (): Promise<any> => {
+  // TODO: finish this
+
   return { }; // return progress
 }
