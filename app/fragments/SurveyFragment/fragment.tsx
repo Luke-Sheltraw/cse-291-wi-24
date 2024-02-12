@@ -2,6 +2,7 @@
 
 import { Footer, SurveyQuestion, RequiredNote } from '@/app/components';
 import { type Question } from '@/app/types';
+import { submitSurvey } from '@/app/actions/session';
 import { useState } from 'react';
 import styles from './fragment.module.css';
 
@@ -30,7 +31,22 @@ const SurveyFragment = (
   }
 
   const submitCallback = () => {
-    // TODO: send survey data
+    const success = submitSurvey({
+      type: 'pre-survey',
+      questions: [
+        {
+          question: 'What\'s your favorite color?',
+          response: 'Red',
+        },
+        {
+          question: 'What\'s your name?',
+          response: 'Luke',
+        },
+      ]
+    });
+
+    if (!success) return;
+
     nextFragment();
   }
 

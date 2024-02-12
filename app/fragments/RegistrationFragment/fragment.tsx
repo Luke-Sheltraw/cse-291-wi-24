@@ -1,19 +1,16 @@
 import styles from './fragment.module.css';
-import { createUser, startSession } from '@/app/actions/session';
+import { startSession } from '@/app/actions/session';
 
 const RegistrationFragment = ({ nextFragment }: { nextFragment: Function }) => {
   const handleAppStart = async () => {
-    const user_id = await createUser();
-    if (!user_id) {
-      console.error('Unable to create new user.');
+    const session_id = await startSession();
+
+    if (!session_id) {
+      console.error('Unable to start session');
       return;
     }
 
-    document.cookie = `user_id=${ user_id }`;
-
-    const session_id = await startSession();
-
-    console.log(session_id);
+    document.cookie = `session_id=${ session_id }`;
 
     nextFragment();
   }
