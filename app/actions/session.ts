@@ -2,21 +2,20 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { Fragment } from '@/app/types';
 
 const supabaseUrl = process.env.SUPABASE_URL ?? '';
 const supabaseKey = process.env.SUPABASE_KEY ?? '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// TODO: add more error handling
-
-export const hasExistingSession = async (): Promise<boolean> => {
-  return cookies().has('session_id');
-}
-
 export const startSession = async (): Promise<boolean> => {
   if (cookies().has('session_id')) {
-    console.error('User already has session'); // TODO: add user prompt to continue session
-    return false;
+    await supabase
+      .from('Sessions')
+      .delete()
+      .eq('id', cookies().get('session_id'));
+
+    cookies().delete('session_id');
   }
 
   const { data, error } = await supabase
@@ -100,8 +99,22 @@ export const submitSurvey = async ({
   return true;
 }
 
-export const getProgress = async (): Promise<any> => {
-  // TODO: finish this
+export const getProgress = async (): Promise<Fragment> => {
+  const session_id = cookies().get('session_id')?.value;
 
-  return { }; // return progress
+  if (!session_id) return Fragment.Registration;
+
+  const { data, error } = await supabase
+    .from('Sessions')
+    .select()
+    .eq('id', session_id);
+
+  if (error) {
+    console.error('Error retrieving progress from session ID');
+    return Fragment.Registration;
+  }
+
+  if (data?.[0]?.pre_survey_id === null) return Fragment.Registration;
+  else if (data?.[0]?.post_survey_id === null) return Fragment.Feed;
+  else return Fragment.Confirmation;
 }

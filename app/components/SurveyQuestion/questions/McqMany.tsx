@@ -41,7 +41,7 @@ const McqMany = (
               <input
                 type='checkbox'
                 name={ id }
-                value={ unique_option_id }
+                value={ option_text }
                 id={ unique_option_id }
                 onInput={ inputCallback }
               />

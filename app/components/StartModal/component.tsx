@@ -7,7 +7,7 @@ const StartModal = ({ startAction }: { startAction: Function}) => {
       <div className={ styles.backdrop }></div>
       <dialog className={ styles.modal } open>
         <p>
-          You will now view a series of Tweets.
+          You will now view a series of social media posts.
         </p>
         <TimedButton
           timerLength={ 5 }

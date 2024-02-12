@@ -26,6 +26,7 @@ export default function Home() {
             case Fragment.Registration: return (
               <RegistrationFragment
                 nextFragment={ () => setCurFragment(Fragment.PreSurvey) }
+                setCurFragment={ setCurFragment }
               />
             );
             case Fragment.PreSurvey: return (

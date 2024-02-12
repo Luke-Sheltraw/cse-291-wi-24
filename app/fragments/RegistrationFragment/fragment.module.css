@@ -14,3 +14,9 @@
   margin-bottom: 3rem;
   padding: 0 1.5rem;
 }
+
+.button_wrapper {
+  width: 18rem;
+  display: flex;
+  justify-content: space-between;
+}
