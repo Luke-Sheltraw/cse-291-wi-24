@@ -10,6 +10,16 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const startSession = async (): Promise<boolean> => {
   if (cookies().has('session_id')) {
+    const { data } = await supabase
+      .from('Sessions')
+      .select()
+      .eq('id', cookies().get('session_id'));
+
+    if (data?.[0]?.post_survey_id) {
+      console.error('Cannot replace completed session');
+      return false;
+    }
+
     await supabase
       .from('Sessions')
       .delete()
@@ -114,7 +124,7 @@ export const getProgress = async (): Promise<Fragment> => {
     return Fragment.Registration;
   }
 
-  if (data?.[0]?.pre_survey_id === null) return Fragment.Registration;
-  else if (data?.[0]?.post_survey_id === null) return Fragment.Feed;
+  if (!data?.[0]?.pre_survey_id) return Fragment.Registration;
+  else if (!data?.[0]?.post_survey_id) return Fragment.Feed;
   else return Fragment.Confirmation;
 }
