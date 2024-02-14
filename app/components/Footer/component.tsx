@@ -1,4 +1,4 @@
-import { TimedButton } from '@/app/components';
+import { TimedButton, PrimaryButton } from '@/app/components';
 import styles from './component.module.css';
 import { useState } from 'react';
 
@@ -35,11 +35,12 @@ const Footer = (
             Continue
           </TimedButton>
         :
-          <button
-            className='primary_button'
+          <PrimaryButton
             disabled={ !enabled }
-            onClick={ () => continueAction() }
-          >Continue</button>
+            onClick={ continueAction }
+          >
+            Continue
+          </PrimaryButton>
       }
     </footer>
   );

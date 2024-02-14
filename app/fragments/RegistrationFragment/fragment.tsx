@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import styles from './fragment.module.css';
 import { Fragment } from '@/app/types';
 import { startSession, getProgress } from '@/app/actions/session';
+import { PrimaryButton } from '@/app/components';
 
 const RegistrationFragment = (
   { nextFragment, setCurFragment }:
@@ -47,30 +48,27 @@ const RegistrationFragment = (
             <p className={ styles.message }>
               Thank you for your interest in participating in this study. You should expect to set aside 15 minutes.
             </p>
-            <button
-              className='primary_button'
+            <PrimaryButton
               onClick={ handleAppStart }
             >
               Begin
-            </button>
+            </PrimaryButton>
           </>);
           case 'progress': return (<>
             <p className={ styles.message }>
               It looks like you have previous progress. You may restart or continue from where you left off.
             </p>
             <div className={ styles.button_wrapper }>
-              <button
-                className='primary_button'
+              <PrimaryButton
                 onClick={ startApp }
               >
                 Restart
-              </button>
-              <button
-                className='primary_button'
+              </PrimaryButton>
+              <PrimaryButton
                 onClick={ handleAppContinue }
               >
                 Continue
-              </button>
+              </PrimaryButton>
             </div>
           </>);
           case 'completed': return (<>

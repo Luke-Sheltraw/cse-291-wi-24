@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { PrimaryButton } from '@/app/components';
 import styles from './component.module.css';
 
 function padZeros(value: string): string {
@@ -49,15 +50,14 @@ const TimedButton = (
     return () => {
       clearInterval(timerInterval);
     }
-  },[disabled]);
+  },[activeCallback, disabled, secondsLeft, targetDuration]);
 
   const handleButtonClick = () => {
     if (secondsLeft <= 0) buttonAction();
   }
 
   return (
-    <button
-      className='primary_button'
+    <PrimaryButton
       disabled={ secondsLeft > 0 }
       onClick={ handleButtonClick }
     >
@@ -68,7 +68,7 @@ const TimedButton = (
         </span>
       }
       { children }
-    </button>
+    </PrimaryButton>
   );
 }
 

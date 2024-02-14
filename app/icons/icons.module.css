@@ -1,0 +1,13 @@
+.loading_icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 2px solid;
+  border-color: white transparent white transparent;
+  border-radius: 50%;
+  animation: 1s linear infinite spin;
+}
+
+@keyframes spin {
+  from { transform: rotateZ(0); }
+  to { transform: rotateZ(360deg); }
+}

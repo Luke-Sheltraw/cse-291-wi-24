@@ -6,6 +6,7 @@ import RepostIcon from './Repost';
 import ShareIcon from './Share';
 import UsersIcon from './Users';
 import ViewsIcon from './Views';
+import LoadingIcon from './Loading';
 
 export {
   BookmarkIcon,
@@ -16,4 +17,5 @@ export {
   ShareIcon,
   UsersIcon,
   ViewsIcon,
+  LoadingIcon,
 }

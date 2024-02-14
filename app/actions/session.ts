@@ -13,7 +13,7 @@ export const startSession = async (): Promise<boolean> => {
     const { data } = await supabase
       .from('Sessions')
       .select()
-      .eq('id', cookies().get('session_id'));
+      .eq('id', cookies().get('session_id')?.value);
 
     if (data?.[0]?.post_survey_id) {
       console.error('Cannot replace completed session');
@@ -23,7 +23,7 @@ export const startSession = async (): Promise<boolean> => {
     await supabase
       .from('Sessions')
       .delete()
-      .eq('id', cookies().get('session_id'));
+      .eq('id', cookies().get('session_id')?.value);
 
     cookies().delete('session_id');
   }
