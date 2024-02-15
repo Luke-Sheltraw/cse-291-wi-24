@@ -1,12 +1,20 @@
 import { useRef, useState } from 'react';
 import styles from './fragment.module.css';
-import { Fragment } from '@/app/types';
-import { startSession, getProgress } from '@/app/actions/session';
+import { FeedVariant, Fragment } from '@/app/types';
+import { startSession, getProgress, getStudyVariant } from '@/app/actions/session';
 import { PrimaryButton } from '@/app/components';
 
 const RegistrationFragment = (
-  { nextFragment, setCurFragment }:
-  { nextFragment: Function, setCurFragment: Function }
+  {
+    nextFragment,
+    setCurFragment,
+    setFeedVariant,
+  }:
+  {
+    nextFragment: Function,
+    setCurFragment: Function,
+    setFeedVariant: Function,
+  }
 ) => {
   const [dialogVariant, setDialogVariant] = useState<'register'|'progress'|'completed'>('register');
   const priorProgress = useRef<Fragment>();
@@ -31,10 +39,30 @@ const RegistrationFragment = (
       return;
     }
 
+    await updateFeedVariant();
     nextFragment();
   }
 
+  const updateFeedVariant = async () => {
+    const feedVariant = await (async () => {
+      switch(await getStudyVariant()) {
+        case 'control': return FeedVariant.NoContext;
+        case 'automated': return FeedVariant.AutomatedContext;
+        case 'human': return FeedVariant.HumanContext;
+        default: return null;
+      }
+    })();
+
+    if (!feedVariant) {
+      console.error('Unable to start session');
+      return;
+    }
+
+    setFeedVariant(feedVariant);
+  }
+
   const handleAppContinue = async () => {
+    await updateFeedVariant();
     setCurFragment(priorProgress.current ?? Fragment.Registration);
   }
 

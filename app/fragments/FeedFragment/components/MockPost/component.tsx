@@ -1,4 +1,5 @@
-import { type FeedPost, FeedVariant } from '../../types';
+import { type FeedPost } from '../../types';
+import { FeedVariant } from '@/app/types';
 import styles from './component.module.css';
 import {
   MoreIcon,
@@ -17,8 +18,6 @@ const CONTEXT_SUBTEXT_AUTOMATED: string = 'Context has been provided by our auto
 const CONTEXT_TITLE_HUMAN: string = 'Readers added context they thought people might want to know';
 const CONTEXT_TITLE_AUTOMATED: string = 'Our automated system added context people might want to know';
 
-const CURRENT_FEED_VARIANT: FeedVariant = FeedVariant.AutomatedContext;
-
 function getContextSubtextByFeedVariant(feedVariant: FeedVariant): string {
   switch (feedVariant) {
     case FeedVariant.HumanContext: return CONTEXT_SUBTEXT_HUMAN;
@@ -36,13 +35,12 @@ function getContextTitleByFeedVariant(feedVariant: FeedVariant): string {
 }
 
 const MockPost = ({
-  fp
+  fp,
+  feedVariant,
 }: {
-  fp: FeedPost
+  fp: FeedPost,
+  feedVariant: FeedVariant,
 }) => {
-
-  const feedVariant: FeedVariant = CURRENT_FEED_VARIANT;
-
   return (
     <article className={ styles.post_wrapper }>
       <div className={ styles.profile_picture }></div>

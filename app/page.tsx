@@ -8,7 +8,7 @@ import {
   ConfirmationFragment,
   RegistrationFragment,
 } from './fragments';
-import { Fragment, type Question } from './types';
+import { FeedVariant, Fragment, type Question } from './types';
 import pre_qs from './pre_questions.json';
 import post_qs from './post_questions.json';
 
@@ -17,6 +17,7 @@ const postQuestions = post_qs as Question[];
 
 export default function Home() {
   const [curFragment, setCurFragment] = useState<Fragment>(Fragment.Registration);
+  const [feedVariant, setFeedVariant] = useState<FeedVariant | null>(null);
 
   return (
     <main className={ styles.wrapper }>
@@ -27,6 +28,7 @@ export default function Home() {
               <RegistrationFragment
                 nextFragment={ () => setCurFragment(Fragment.PreSurvey) }
                 setCurFragment={ setCurFragment }
+                setFeedVariant={ setFeedVariant }
               />
             );
             case Fragment.PreSurvey: return (
@@ -39,6 +41,7 @@ export default function Home() {
             case Fragment.Feed: return (
               <FeedFragment
                 nextFragment={ () => setCurFragment(Fragment.PostSurvey) }
+                feedVariant={ feedVariant }
               />
             );
             case Fragment.PostSurvey: return (

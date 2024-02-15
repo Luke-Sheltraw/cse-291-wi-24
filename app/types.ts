@@ -18,3 +18,9 @@ export enum Fragment {
   PostSurvey,
   Confirmation
 }
+
+export enum FeedVariant {
+  NoContext,
+  HumanContext,
+  AutomatedContext,
+}

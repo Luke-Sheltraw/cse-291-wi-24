@@ -4,10 +4,19 @@ import { type FeedPost } from './types';
 import { MockPost } from './components';
 import { useEffect, useState } from 'react';
 import { Footer, StartModal } from '@/app/components';
+import { FeedVariant } from '@/app/types';
 import styles from './fragment.module.css';
 import importedPosts from './posts.json';
 
-const FeedFragment = ({ nextFragment }: { nextFragment: Function }) => {
+const FeedFragment = (
+  { nextFragment,
+    feedVariant,
+  }:
+  {
+    nextFragment: Function,
+    feedVariant: FeedVariant | null,
+  }
+) => {
   const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
   const [timerActive, setTimerActive] = useState<boolean>(false);
   const [showStartModal, setShowStartModal] = useState<boolean>(true);
@@ -15,6 +24,8 @@ const FeedFragment = ({ nextFragment }: { nextFragment: Function }) => {
   useEffect(() => {
     setFeedPosts(importedPosts as FeedPost[]); // TODO: replace this with dynamic assignment
   }, []);
+
+  if (feedVariant === null) return null;
 
   const handleModalClose = () => {
     setTimerActive(true);
@@ -33,6 +44,7 @@ const FeedFragment = ({ nextFragment }: { nextFragment: Function }) => {
           <MockPost
             key={ feedPost.uid }  
             fp={ feedPost }
+            feedVariant={ feedVariant }
           />
         )
       }

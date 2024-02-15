@@ -12,9 +12,3 @@ export type FeedPost = {
   post_body: string,
   context_note: string | null,
 }
-
-export enum FeedVariant {
-  NoContext,
-  HumanContext,
-  AutomatedContext,
-}

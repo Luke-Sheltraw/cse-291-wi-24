@@ -9,13 +9,14 @@ const supabaseKey = process.env.SUPABASE_KEY ?? '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const startSession = async (): Promise<boolean> => {
+  /* Delete existing session if exists and is incomplete */
   if (cookies().has('session_id')) {
     const { data } = await supabase
       .from('Sessions')
       .select()
       .eq('id', cookies().get('session_id')?.value);
 
-    if (data?.[0]?.post_survey_id) {
+    if (data?.[0]?.pre_survey_id && data?.[0]?.post_survey_id) {
       console.error('Cannot replace completed session');
       return false;
     }
@@ -28,20 +29,81 @@ export const startSession = async (): Promise<boolean> => {
     cookies().delete('session_id');
   }
 
+  /* Create new session with variant */
+  const variant = await chooseStudyVariant();
+
   const { data, error } = await supabase
     .from('Sessions')
-    .insert({})
+    .insert({ variant })
     .select();
 
   const session_id = data?.[0]?.id;
 
+  /* Return success status and assign cookie */
   if (error || !session_id) {
     console.log('Error creating new sesion', error);
     return false;
   }
 
   cookies().set('session_id', session_id);
-  return true; // return success status
+  return true;
+}
+
+const chooseStudyVariant = async (): Promise<'control' | 'human' | 'automated'> => {
+  /* Get existing counts of three variants of study */
+  const controlCount = (await supabase
+    .from('Sessions')
+    .select('*', { count: 'exact', head: true })
+    .eq('variant', 'control'))
+    ?.count ?? 0;
+
+  const humanCount = (await supabase
+    .from('Sessions')
+    .select('*', { count: 'exact', head: true })
+    .eq('variant', 'human'))
+    ?.count ?? 0;
+
+  const automatedCount = (await supabase
+    .from('Sessions')
+    .select('*', { count: 'exact', head: true })
+    .eq('variant', 'automated'))
+    ?.count ?? 0;
+
+  /* Assign minimum of three three*/
+  const minCountValue = Math.min(
+    controlCount,
+    humanCount,
+    automatedCount,
+  );
+
+  if (controlCount === minCountValue) {
+    return 'control';
+  } else if (humanCount === minCountValue) {
+    return 'human';
+  } else {
+    return 'automated';
+  }
+}
+
+export const getStudyVariant = async (): Promise<'control' | 'human' | 'automated' | null> => {
+  const session_id = cookies().get('session_id')?.value;
+
+  if (!session_id) {
+    console.error('No session associated with request');
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from('Sessions')
+    .select()
+    .eq('id', session_id);
+
+  if (error) {
+    console.error('Error fetching study variant');
+    return null;
+  }
+
+  return data?.[0]?.variant ?? null;
 }
 
 export const submitSurvey = async ({
@@ -57,7 +119,7 @@ export const submitSurvey = async ({
   /* Validate session */
   const session_id = cookies().get('session_id')?.value;
   if (!session_id) {
-    console.error('No session associated to survey submission');
+    console.error('No session associated with request');
     return false;
   }
 
@@ -75,7 +137,6 @@ export const submitSurvey = async ({
     console.error('Malformed survey input');
     return false;
   }
-
 
   /* Submit survey */
   const surveyResponse = await supabase
@@ -110,6 +171,7 @@ export const submitSurvey = async ({
 }
 
 export const getProgress = async (): Promise<Fragment> => {
+  /* Return fragment corresponding the first incomplete section */
   const session_id = cookies().get('session_id')?.value;
 
   if (!session_id) return Fragment.Registration;
@@ -120,7 +182,7 @@ export const getProgress = async (): Promise<Fragment> => {
     .eq('id', session_id);
 
   if (error) {
-    console.error('Error retrieving progress from session ID');
+    console.error('Error retrieving progress');
     return Fragment.Registration;
   }
 
