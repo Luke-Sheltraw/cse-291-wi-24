@@ -3,6 +3,7 @@
   border-radius: 5rem;
   padding: 1rem 2rem;
   transition: 0.2s background-color;
+  position: relative;
 }
 
 .primary_button:enabled {
@@ -18,4 +19,18 @@
 
 .primary_button:disabled {
   background-color: var(--lightGray);
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.loading_wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -20,10 +20,15 @@ const PrimaryButton = (
       disabled={ disabled }
       onClick={ handleButtonClick }
     >
+      <span className={ isLoading ? styles.hidden : undefined }>
+        { children }
+      </span>
       {
-        isLoading
-        ? <LoadingIcon />
-        : children
+        isLoading && (
+          <div className={ styles.loading_wrapper }>
+            <LoadingIcon />
+          </div>
+        )
       }
     </button>
   );

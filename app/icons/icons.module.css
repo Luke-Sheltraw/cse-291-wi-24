@@ -1,4 +1,5 @@
 .loading_icon {
+  display: inline-block;
   width: 0.875rem;
   height: 0.875rem;
   border: 2px solid;
