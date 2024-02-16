@@ -3,19 +3,32 @@
 import { Footer, SurveyQuestion, RequiredNote } from '@/app/components';
 import { type Question } from '@/app/types';
 import { submitSurvey } from '@/app/actions/session';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './fragment.module.css';
 
 const SurveyFragment = (
-  { nextFragment, surveyPostVariant, questions }:
+  { nextFragment, surveyPostVariant, questionsPromise }:
   {
     nextFragment: Function,
     surveyPostVariant: 'pre-survey' | 'post-survey',
-    questions: Question[]
+    questionsPromise: Promise<Question[]> | null,
   }
 ) => {
+  const [questions, setQuestions] = useState<Question[] | null>(null);
   const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
   const questionsAndResponses = useRef<{ [question: string]: string | string[] }>({});
+
+  useEffect(() => {
+    (async () => {
+      setQuestions(await questionsPromise);
+    })()
+
+    return () => {
+
+    } // TODO: make cancellable
+  }, [questionsPromise]);
+
+  if (questions === null) return null;
 
   const answeredCallback = (question: Question, answer: string | string[]) => {
     setAnsweredQuestions((curAnsweredQuestions) => {

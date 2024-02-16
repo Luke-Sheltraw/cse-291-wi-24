@@ -1,31 +1,38 @@
 'use client'
 
-import { type FeedPost } from './types';
+import { type FeedPost } from '@/app/types';
 import { MockPost } from './components';
 import { useEffect, useState } from 'react';
 import { Footer, StartModal } from '@/app/components';
 import { FeedVariant } from '@/app/types';
 import styles from './fragment.module.css';
-import importedPosts from './posts.json';
 
 const FeedFragment = (
   { nextFragment,
     feedVariant,
+    postsPromise,
   }:
   {
     nextFragment: Function,
     feedVariant: FeedVariant | null,
+    postsPromise: Promise<FeedPost[]> | null,
   }
 ) => {
-  const [feedPosts, setFeedPosts] = useState<FeedPost[]>([]);
+  const [feedPosts, setFeedPosts] = useState<FeedPost[] | null>(null);
   const [timerActive, setTimerActive] = useState<boolean>(false);
   const [showStartModal, setShowStartModal] = useState<boolean>(true);
 
   useEffect(() => {
-    setFeedPosts(importedPosts as FeedPost[]); // TODO: replace this with dynamic assignment
-  }, []);
+    (async () => {
+      setFeedPosts(await postsPromise);
+    })()
 
-  if (feedVariant === null) return null;
+    return () => {
+
+    } // TODO: make cancellable
+  }, [postsPromise]);
+
+  if (feedPosts === null || feedVariant === null) return null;
 
   const handleModalClose = () => {
     setTimerActive(true);

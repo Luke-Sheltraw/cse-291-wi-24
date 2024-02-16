@@ -190,3 +190,17 @@ export const getProgress = async (): Promise<Fragment> => {
   else if (!data?.[0]?.post_survey_id) return Fragment.Feed;
   else return Fragment.Confirmation;
 }
+
+export const getConfigValue = async (key: string): Promise<any> => {
+  const { data, error } = await supabase
+    .from('Configuration')
+    .select()
+    .eq('key', key);
+
+  if (error) {
+    console.error('Error retrieving configuration value');
+    return;
+  };
+
+  return data?.[0]?.value ?? null;
+}

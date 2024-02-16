@@ -1,23 +1,29 @@
 'use client'
 
 import styles from './page.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   FeedFragment,
   SurveyFragment,
   ConfirmationFragment,
   RegistrationFragment,
 } from './fragments';
-import { FeedVariant, Fragment, type Question } from './types';
-import pre_qs from './pre_questions.json';
-import post_qs from './post_questions.json';
-
-const preQuestions = pre_qs as Question[];
-const postQuestions = post_qs as Question[];
+import { getConfigValue } from '@/app/actions/session';
+import { FeedVariant, Fragment, type Question, type FeedPost } from './types';
 
 export default function Home() {
   const [curFragment, setCurFragment] = useState<Fragment>(Fragment.Registration);
   const [feedVariant, setFeedVariant] = useState<FeedVariant | null>(null);
+
+  const [postsPromise, setPostsPromise] = useState<Promise<FeedPost[]> | null>(null);
+  const [preQuestionsPromise, setPreQuestionsPromise] = useState<Promise<Question[]> | null>(null);
+  const [postQuestionsPromise, setPostQuestionsPromise] = useState<Promise<Question[]> | null>(null);
+
+  useEffect(() => {
+    setPostsPromise(getConfigValue('posts'));
+    setPreQuestionsPromise(getConfigValue('pre_questions'));
+    setPostQuestionsPromise(getConfigValue('post_questions'));
+  }, []);
 
   return (
     <main className={ styles.wrapper }>
@@ -35,20 +41,21 @@ export default function Home() {
               <SurveyFragment
                 nextFragment={ () => setCurFragment(Fragment.Feed) }
                 surveyPostVariant='pre-survey'
-                questions={ preQuestions }
+                questionsPromise={ preQuestionsPromise }
               />
             );
             case Fragment.Feed: return (
               <FeedFragment
                 nextFragment={ () => setCurFragment(Fragment.PostSurvey) }
                 feedVariant={ feedVariant }
+                postsPromise={ postsPromise }
               />
             );
             case Fragment.PostSurvey: return (
               <SurveyFragment
                 nextFragment={ () => setCurFragment(Fragment.Confirmation) }
                 surveyPostVariant='post-survey'
-                questions={ postQuestions }
+                questionsPromise={ postQuestionsPromise }
               />
             );
             case Fragment.Confirmation: return (
