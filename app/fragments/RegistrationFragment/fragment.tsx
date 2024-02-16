@@ -53,7 +53,7 @@ const RegistrationFragment = (
       }
     })();
 
-    if (!feedVariant) {
+    if (feedVariant === null) {
       console.error('Unable to start session');
       return;
     }
