@@ -1,4 +1,4 @@
-import { type FeedPost } from '../../types';
+import { type FeedPost } from '@/app/types';
 import { FeedVariant } from '@/app/types';
 import styles from './component.module.css';
 import {
