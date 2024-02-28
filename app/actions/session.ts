@@ -16,7 +16,7 @@ export const startSession = async (): Promise<boolean> => {
       .select()
       .eq('id', cookies().get('session_id')?.value);
 
-    if (data?.[0]?.pre_survey_id && data?.[0]?.post_survey_id) {
+    if (data?.[0]?.pre_survey_id && data?.[0]?.post_survey_one_id && data?.[0]?.post_survey_two_id) {
       console.error('Cannot replace completed session');
       return false;
     }
@@ -110,7 +110,7 @@ export const submitSurvey = async ({
   type,
   questions,
 }: {
-  type: 'pre-survey' | 'post-survey',
+  type: 'pre-survey' | 'post-survey-one' | 'post-survey-two',
   questions: {
     question: string,
     response: string | string[],
@@ -125,14 +125,14 @@ export const submitSurvey = async ({
 
   /* Validate format of input */
   if (
-    !(type === 'pre-survey' || type === 'post-survey')
-    || !questions.every((q) => {
-      return (
+    !(type === 'pre-survey' || type === 'post-survey-one' || type === 'post-survey-two')
+    || !questions.every((q) => 
+      (
         Object.keys(q).length === 2
         && typeof q.question === 'string'
         && (typeof q.response === 'string' || Array.isArray(q.response))
-      );
-    })
+      )
+    )
   ) {
     console.error('Malformed survey input');
     return false;
@@ -154,9 +154,13 @@ export const submitSurvey = async ({
     .from('Sessions')
     .update({
       [
-        type === 'pre-survey'
-        ? 'pre_survey_id'
-        : 'post_survey_id'
+        (() => {
+          switch (type) {
+            case 'pre-survey': return 'pre_survey_id';
+            case 'post-survey-one': return 'post_survey_one_id';
+            case 'post-survey-two': return 'post_survey_two_id';
+          }
+        })()
       ]: surveyResponse.data?.[0]?.id,
     })
     .eq('id', session_id);
@@ -187,7 +191,8 @@ export const getProgress = async (): Promise<Fragment> => {
   }
 
   if (!data?.[0]?.pre_survey_id) return Fragment.Registration;
-  else if (!data?.[0]?.post_survey_id) return Fragment.Feed;
+  else if (!data?.[0]?.post_survey_one_id) return Fragment.Feed;
+  else if (!data?.[0]?.post_survey_two_id) return Fragment.PostSurveyTwo;
   else return Fragment.Confirmation;
 }
 

@@ -15,8 +15,9 @@ export enum Fragment {
   Registration,
   PreSurvey,
   Feed,
-  PostSurvey,
-  Confirmation
+  PostSurveyOne,
+  PostSurveyTwo,
+  Confirmation,
 }
 
 export enum FeedVariant {

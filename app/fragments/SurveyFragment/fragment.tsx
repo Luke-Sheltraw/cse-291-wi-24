@@ -10,7 +10,7 @@ const SurveyFragment = (
   { nextFragment, surveyPostVariant, questionsPromise }:
   {
     nextFragment: Function,
-    surveyPostVariant: 'pre-survey' | 'post-survey',
+    surveyPostVariant: 'pre-survey' | 'post-survey-one' | 'post-survey-two',
     questionsPromise: Promise<Question[]> | null,
   }
 ) => {
