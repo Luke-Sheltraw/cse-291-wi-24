@@ -60,7 +60,7 @@ const FeedFragment = (
         messageDisabled='Please continue reading the posts.'
         messageEnabled='You may proceed.'
         enabled={ timerActive }
-        timerLength={ 15 }
+        timerLength={ 120 }
         continueAction={ nextFragment }
       />
     </>
