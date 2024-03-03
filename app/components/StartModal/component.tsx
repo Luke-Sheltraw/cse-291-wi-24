@@ -6,7 +6,7 @@ const StartModal = ({ startAction }: { startAction: Function}) => {
     <>
       <div className={ styles.backdrop }></div>
       <dialog className={ styles.modal } open>
-        <p>
+        <p className={ styles.modal_text }>
           You will now view a series of social media posts. You will be able to proceed past the posts once the timer on the bottom of the screen expires. Please dedicate your attention to the posts until then.
         </p>
         <TimedButton

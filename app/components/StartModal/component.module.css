@@ -22,3 +22,7 @@
   align-items: center;
   top: 20%;
 }
+
+.modal_text {
+  margin-top: 0;
+}
