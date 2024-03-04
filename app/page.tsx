@@ -10,9 +10,9 @@ import {
 } from './fragments';
 import { getConfigValue } from '@/app/actions/session';
 import { FeedVariant, Fragment, type Question, type FeedPost } from './types';
+import { checkIfUserAgentIsMobile} from '@/app/helpers';
 
 export default function Home() {
-  // TODO: reject users from mobile devices
   const [curFragment, setCurFragment] = useState<Fragment>(Fragment.Registration);
   const [feedVariant, setFeedVariant] = useState<FeedVariant | null>(null);
 
@@ -27,6 +27,14 @@ export default function Home() {
     setPostQuestionsOnePromise(getConfigValue('post_questions_one'));
     setPostQuestionsTwoPromise(getConfigValue('post_questions_two'));
   }, []);
+
+  if (checkIfUserAgentIsMobile()) {
+    return (
+      <p>
+        Thank you for your interest in participating in this study. It appears you are accessing this site from a mobile device. Please restart on a laptop or desktop computer. Thank you.
+      </p>
+    );
+  }
 
   return (
     <main className={ styles.wrapper }>
