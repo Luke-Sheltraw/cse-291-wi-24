@@ -21,14 +21,20 @@ export default function Home() {
   const [postQuestionsOnePromise, setPostQuestionsOnePromise] = useState<Promise<Question[]> | null>(null);
   const [postQuestionsTwoPromise, setPostQuestionsTwoPromise] = useState<Promise<Question[]> | null>(null);
 
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
   useEffect(() => {
+    const isMobileCheck = checkIfUserAgentIsMobile();
+    setIsMobile(isMobileCheck);
+    if (isMobileCheck) return;
+
     setPostsPromise(getConfigValue('posts'));
     setPreQuestionsPromise(getConfigValue('pre_questions'));
     setPostQuestionsOnePromise(getConfigValue('post_questions_one'));
     setPostQuestionsTwoPromise(getConfigValue('post_questions_two'));
   }, []);
 
-  if (checkIfUserAgentIsMobile()) {
+  if (isMobile) {
     return (
       <p>
         Thank you for your interest in participating in this study. It appears you are accessing this site from a mobile device. Please restart on a laptop or desktop computer. Thank you.
