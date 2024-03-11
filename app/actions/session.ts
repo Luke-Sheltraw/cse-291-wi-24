@@ -209,3 +209,48 @@ export const getConfigValue = async (key: string): Promise<any> => {
 
   return data?.[0]?.value ?? null;
 }
+
+export const getResponsesPerQuestionByVariant = async (variant: string): Promise<any> => {
+  const { data, error } = await supabase
+    .from('Sessions')
+    .select(`
+      variant,
+      pre_survey_id (
+        questions
+      ),
+      post_survey_one_id (
+        questions
+      ),
+      post_survey_two_id (
+        questions
+      )
+    `)
+    .eq('variant', variant);
+
+  if (error || !data) return 'Error';
+
+  const cleanedData = data.map((entry) => ([
+    // @ts-ignore
+    ...entry.pre_survey_id?.questions,
+    // @ts-ignore
+    ...entry.post_survey_one_id?.questions,
+    // @ts-ignore
+    ...entry.post_survey_two_id?.questions,
+  ]));
+
+  const aggregatedData: { [key: string]: any } = {};
+
+  cleanedData.forEach((entry) => {
+    const questionsResponses = entry;
+    questionsResponses.forEach(({ question, response }: { question: string, response: string | string[] }) => {
+      if (!aggregatedData[question]) {
+        aggregatedData[question] = [];
+      }
+
+      const responseValue = Array.isArray(response) ? response.join(', ') : response;
+      aggregatedData[question].push(`"${ responseValue }"`);
+    });
+  });
+
+  return aggregatedData;
+}
